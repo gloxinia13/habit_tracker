@@ -10,16 +10,35 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Habit Tracker',
-    theme: ThemeData(
-      scaffoldBackgroundColor: const Color.fromARGB(255, 224, 224, 224)
-    ),
-     home: HomeWidget());
+    return MaterialApp(
+      title: 'Habit Tracker',
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 211, 211, 211),
+      ),
+      home: HomeWidget(),
+    );
   }
 }
 
-class HomeWidget extends StatelessWidget {
+class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
+
+  @override
+  State<HomeWidget> createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
+  List<Widget> habits = [];
+
+  void _addHabit() {
+    FractionallySizedBox box = FractionallySizedBox(
+      widthFactor: 0.9,
+      child: Container(color: Colors.green),
+    );
+    setState(() {
+      habits.add(box);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +48,18 @@ class HomeWidget extends StatelessWidget {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 47, 135, 206),
       ),
-      body: Column(children: [
-        ],
+      body: ListView.builder(
+        itemCount: habits.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            height: 50,
+            color: Colors.amber,
+            child: Center(child: habits[index]),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _addHabit,
         shape: CircleBorder(),
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
