@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -33,13 +34,59 @@ class _HomeWidgetState extends State<HomeWidget> {
   List<Widget> habits = [];
 
   void _addHabit() {
-    DateTime now = DateTime.now();
-    var formatter = DateFormat('dd-MM-yyyy');
-    String date = formatter.format(now);
-    final box = _createHabit('Title', 'Desc', date);
-    setState(() {
-      habits.add(box);
-    });
+    // DateTime now = DateTime.now();
+    // var formatter = DateFormat('dd-MM-yyyy');
+    // String date = formatter.format(now);
+    // final box = _createHabit('Title', 'Desc', date);
+    // setState(() {
+    //   habits.add(box);
+    // });
+    _dialog();
+  }
+
+  Future<void> _dialog() async {
+    return showDialog(
+      context: context,
+       builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add habit'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.title),
+                    label: Text('Title *')
+                  ),
+                  validator: (String? value) {
+                    return (value != null ? 'Error' : null);
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.description),
+                    label: Text('Description *')
+                  ),
+                  validator: (String? value) {
+                    return (value != null ? 'Error' : null);
+                  },
+                )
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () {
+              Navigator.of(context).pop();
+            }, 
+            child: const Text('Cancel')),
+            TextButton(onPressed: () {
+              Navigator.of(context).pop();
+            }, 
+            child: const Text('Approve')),
+          ],
+        );
+      }
+    );
   }
 
   Widget _createHabit(String title, String description, String createdAt) {
