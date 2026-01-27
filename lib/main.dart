@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   final app = App();
@@ -14,9 +15,7 @@ class App extends StatelessWidget {
       title: 'Habit Tracker',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromARGB(255, 211, 211, 211),
-        dividerTheme: DividerThemeData(
-          color: Colors.transparent
-        )
+        dividerTheme: DividerThemeData(color: Colors.transparent),
       ),
       home: HomeWidget(),
     );
@@ -34,15 +33,21 @@ class _HomeWidgetState extends State<HomeWidget> {
   List<Widget> habits = [];
 
   void _addHabit() {
-    final box = _createHabit('Title');
+    DateTime now = DateTime.now();
+    var formatter = DateFormat('dd-MM-yyyy');
+    String date = formatter.format(now);
+    final box = _createHabit('Title', 'Desc', date);
     setState(() {
       habits.add(box);
     });
   }
 
-  Widget _createHabit(String title) {
+  Widget _createHabit(String title, String description, String createdAt) {
     return Center(
-      child: Text(title),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [Text(title), Text(description), Text(createdAt)],
+      ),
     );
   }
 
@@ -68,7 +73,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             child: Center(child: habits[index]),
           );
         },
-        separatorBuilder: (BuildContext context, int index){
+        separatorBuilder: (BuildContext context, int index) {
           return const Divider();
         },
       ),
