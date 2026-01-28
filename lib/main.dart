@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,22 +31,34 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   List<Widget> habits = [];
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
-  void _addHabit() {
-    // DateTime now = DateTime.now();
-    // var formatter = DateFormat('dd-MM-yyyy');
-    // String date = formatter.format(now);
-    // final box = _createHabit('Title', 'Desc', date);
-    // setState(() {
-    //   habits.add(box);
-    // });
-    _dialog();
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  String title = '';
+  String description = '';
+
+  void _addHabit() async {
+    await _dialog();
+    setState(() {
+      DateTime now = DateTime.now();
+      var formatter = DateFormat('dd-MM-yyyy');
+      String date = formatter.format(now);
+      final box = _createHabit(title, description, date);
+      habits.add(box);
+    });
   }
 
   Future<void> _dialog() async {
     return showDialog(
       context: context,
-       builder: (BuildContext context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Add habit'),
           content: SingleChildScrollView(
@@ -56,36 +67,50 @@ class _HomeWidgetState extends State<HomeWidget> {
                 TextFormField(
                   decoration: const InputDecoration(
                     icon: Icon(Icons.title),
-                    label: Text('Title *')
+                    label: Text('Title *'),
                   ),
                   validator: (String? value) {
-                    return (value != null ? 'Error' : null);
+                    return (value != null || value!.isEmpty ? 'Error' : null);
                   },
+                  controller: titleController,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
                     icon: Icon(Icons.description),
-                    label: Text('Description *')
+                    label: Text('Description *'),
                   ),
                   validator: (String? value) {
                     return (value != null ? 'Error' : null);
                   },
-                )
+                  controller: descriptionController,
+                ),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () {
-              Navigator.of(context).pop();
-            }, 
-            child: const Text('Cancel')),
-            TextButton(onPressed: () {
-              Navigator.of(context).pop();
-            }, 
-            child: const Text('Approve')),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  title = titleController.text;
+                  description = descriptionController.text;
+                });
+                Navigator.pop(context);
+                // title = firstController.text;
+                // description = secondController.text;
+
+                // Navigator.of(context).pop(context);
+              },
+              child: const Text('Approve'),
+            ),
           ],
         );
-      }
+      },
     );
   }
 
@@ -125,7 +150,9 @@ class _HomeWidgetState extends State<HomeWidget> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addHabit,
+        onPressed: () {
+          _addHabit();
+        },
         shape: CircleBorder(),
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
