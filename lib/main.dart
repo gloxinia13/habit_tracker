@@ -48,13 +48,14 @@ class _HomeWidgetState extends State<HomeWidget> {
     await _dialog();
     setState(() {
       DateTime now = DateTime.now();
-      var formatter = DateFormat('dd-MM-yyyy');
+      var formatter = DateFormat('dd-MM-yyyy HH:mm');
       String date = formatter.format(now);
       final box = _createHabit(title, description, date);
       habits.add(box);
     });
   }
 
+  final _formKey = GlobalKey<FormState>();
   Future<void> _dialog() async {
     return showDialog(
       context: context,
@@ -64,15 +65,21 @@ class _HomeWidgetState extends State<HomeWidget> {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.title),
-                    label: Text('Title *'),
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.title),
+                      label: Text('Title *'),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'The title must not be empty!';
+                      }
+                      return null;
+                    },
+                    controller: titleController,
                   ),
-                  validator: (String? value) {
-                    return (value != null || value!.isEmpty ? 'Error' : null);
-                  },
-                  controller: titleController,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -100,11 +107,12 @@ class _HomeWidgetState extends State<HomeWidget> {
                   title = titleController.text;
                   description = descriptionController.text;
                 });
-                Navigator.pop(context);
-                // title = firstController.text;
-                // description = secondController.text;
-
-                // Navigator.of(context).pop(context);
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Success!')));
+                  Navigator.pop(context);
+                }
               },
               child: const Text('Approve'),
             ),
