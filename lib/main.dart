@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/models/habit.dart';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -30,7 +31,7 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  List<Widget> habits = [];
+  List<Habit> habits = [];
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -45,18 +46,15 @@ class _HomeWidgetState extends State<HomeWidget> {
   String description = '';
 
   void _addHabit() async {
-    await _dialog();
+    final habit = await _dialog();
+    if (habit == null) return;
     setState(() {
-      DateTime now = DateTime.now();
-      var formatter = DateFormat('dd-MM-yyyy HH:mm');
-      String date = formatter.format(now);
-      final box = _createHabit(title, description, date);
-      habits.add(box);
+      habits.add(habit);
     });
   }
 
   final _formKey = GlobalKey<FormState>();
-  Future<void> _dialog() async {
+  Future<Habit?> _dialog() async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -67,29 +65,33 @@ class _HomeWidgetState extends State<HomeWidget> {
               children: [
                 Form(
                   key: _formKey,
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.title),
-                      label: Text('Title *'),
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'The title must not be empty!';
-                      }
-                      return null;
-                    },
-                    controller: titleController,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.title),
+                          label: Text('Title *'),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'The title must not be empty!';
+                          }
+                          return null;
+                        },
+                        controller: titleController,
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.description),
+                          label: Text('Description *'),
+                        ),
+                        validator: (String? value) {
+                          return (value == null ? 'Error' : null);
+                        },
+                        controller: descriptionController,
+                      ),
+                    ],
                   ),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.description),
-                    label: Text('Description *'),
-                  ),
-                  validator: (String? value) {
-                    return (value != null ? 'Error' : null);
-                  },
-                  controller: descriptionController,
                 ),
               ],
             ),
@@ -97,37 +99,32 @@ class _HomeWidgetState extends State<HomeWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(context);
+                Navigator.pop(context, null);
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  title = titleController.text;
-                  description = descriptionController.text;
-                });
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('Success!')));
-                  Navigator.pop(context);
-                }
+                if (!_formKey.currentState!.validate()) return;
+
+                final now = DateTime.now();
+                final formatter = DateFormat('dd-MM-yyyy HH:mm');
+
+                final habit = Habit(
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  createdAt: formatter.format(now),
+                );
+
+                titleController.clear();
+                descriptionController.clear();
+                Navigator.pop(context, habit);
               },
               child: const Text('Approve'),
             ),
           ],
         );
       },
-    );
-  }
-
-  Widget _createHabit(String title, String description, String createdAt) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [Text(title), Text(description), Text(createdAt)],
-      ),
     );
   }
 
@@ -146,11 +143,23 @@ class _HomeWidgetState extends State<HomeWidget> {
         padding: EdgeInsets.all(14),
         itemCount: habits.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            height: 150,
-            width: 200,
-            color: Colors.green,
-            child: Center(child: habits[index]),
+          final habit = habits[index];
+
+          return DecoratedBox(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+            child: Container(
+              height: 150,
+              width: 200,
+              color: Colors.green,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(habit.title),
+                  Text(habit.description),
+                  Text(habit.createdAt),
+                ],
+              ),
+            ),
           );
         },
         separatorBuilder: (BuildContext context, int index) {
