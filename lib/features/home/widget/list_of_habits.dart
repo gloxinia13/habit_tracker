@@ -19,7 +19,7 @@ class ListOfHabits extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.green
+            color: Colors.green,
           ),
           height: widgetHeight,
           child: Center(
@@ -35,7 +35,10 @@ class ListOfHabits extends StatelessWidget {
                   ),
                 ),
                 Text(habit.description, style: TextStyle(fontSize: 18)),
-                Text(habit.createdAt, style: TextStyle(fontSize: 12)),
+                Text(
+                  habit.createdAt,
+                  style: TextStyle(fontSize: 12, fontFamily: 'Oswald'),
+                ),
               ],
             ),
           ),
