@@ -18,8 +18,20 @@ class ListOfHabits extends StatelessWidget {
 
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.green,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 140, 140, 140),
+                spreadRadius: 3,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              ),
+            ],
+            gradient: LinearGradient(
+              colors: [const Color.fromARGB(255, 224, 224, 224), const Color.fromARGB(255, 175, 175, 175)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
           height: widgetHeight,
           child: Center(
