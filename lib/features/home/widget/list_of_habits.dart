@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/models/habit.dart';
 
-class ListOfHabits extends StatelessWidget {
+class ListOfHabits extends StatefulWidget {
   const ListOfHabits({super.key, required this.habits});
   final List<Habit> habits;
 
+  @override
+  State<ListOfHabits> createState() => _ListOfHabitsState();
+}
+
+class _ListOfHabitsState extends State<ListOfHabits> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -12,9 +17,9 @@ class ListOfHabits extends StatelessWidget {
 
     return ListView.separated(
       padding: EdgeInsets.all(14),
-      itemCount: habits.length,
+      itemCount: widget.habits.length,
       itemBuilder: (BuildContext context, int index) {
-        final habit = habits[index];
+        final habit = widget.habits[index];
 
         return Container(
           decoration: BoxDecoration(
@@ -28,31 +33,49 @@ class ListOfHabits extends StatelessWidget {
               ),
             ],
             gradient: LinearGradient(
-              colors: [const Color.fromARGB(255, 224, 224, 224), const Color.fromARGB(255, 175, 175, 175)],
+              colors: [
+                const Color.fromARGB(255, 210, 210, 210),
+                const Color.fromARGB(255, 175, 175, 175),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
           ),
           height: widgetHeight,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  habit.title,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(198, 42, 42, 42),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    habit.title,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromARGB(198, 42, 42, 42),
+                    ),
                   ),
+                  Text(habit.description, style: TextStyle(fontSize: 18)),
+                  Text(
+                    habit.createdAt,
+                    style: TextStyle(fontSize: 12, fontFamily: 'Oswald'),
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.habits.removeAt(index);
+                    });
+                  },
+                  icon: Icon(Icons.delete),
                 ),
-                Text(habit.description, style: TextStyle(fontSize: 18)),
-                Text(
-                  habit.createdAt,
-                  style: TextStyle(fontSize: 12, fontFamily: 'Oswald'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
