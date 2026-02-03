@@ -34,10 +34,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       appBar: AppBar(
         title: Text(
           'Home',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
         ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 47, 135, 206),
       ),
       body: ListOfHabits(habits: habits),
       floatingActionButton: FloatingActionButton(
