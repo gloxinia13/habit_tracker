@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/features/home/view/home.dart';
+import 'package:habit_tracker/ui/home.dart';
 import 'package:habit_tracker/theme/theme.dart';
 
 class App extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/features/home/dialog/add_habit_dialog.dart';
-import 'package:habit_tracker/features/home/widget/list_of_habits.dart';
+import 'package:habit_tracker/ui/habit_list/dialog/add_habit_dialog.dart';
+import 'package:habit_tracker/ui/habit_list/habit_list/habit_list.dart';
 import 'package:habit_tracker/models/habit.dart';
 
 class HomeWidget extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/features/habit/view/habit_screen.dart';
+import 'package:habit_tracker/ui/single_habit/single_habit/habit_screen.dart';
 import 'package:habit_tracker/models/habit.dart';
 
 class ListOfHabits extends StatefulWidget {
@@ -24,9 +24,12 @@ class _ListOfHabitsState extends State<ListOfHabits> {
 
         return GestureDetector(
           onTap: () {
-            // Navigator.pushNamed(context, '/habit_screen');
-            Navigator.push(context, MaterialPageRoute<void>(builder: 
-            (context) => HabitScreen(habit: widget.habits[index])));
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => HabitScreen(habit: widget.habits[index]),
+              ),
+            );
           },
           child: Container(
             decoration: BoxDecoration(
