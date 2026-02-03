@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/features/home/view/home.dart';
-import 'package:habit_tracker/theme.dart';
+import 'package:habit_tracker/routes/routes.dart';
+import 'package:habit_tracker/theme/theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -10,7 +10,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Habit Tracker',
       theme: lightTheme,
-      home: HomeWidget(),
+      routes: routes
     );
   }
 }
